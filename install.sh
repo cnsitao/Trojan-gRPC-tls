@@ -198,7 +198,7 @@ server {
     server_name ${domain};
 
    location /trojan_grpc {
-        if ($content_type !~ "application/grpc") {
+        if (\$content_type !~ "application/grpc") {
                 return 404;
         }
         client_max_body_size 512K;
@@ -211,7 +211,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always; # 启用HSTS
 
     location / {
-        if ($host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
+        if (\$host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
         }
               root /web;
@@ -238,7 +238,7 @@ server {
     error_page 497 https://\$host:$port\$request_uri;
 	
     location /trojan_grpc {
-        if ($content_type !~ "application/grpc") {
+        if (\$content_type !~ "application/grpc") {
                 return 404;
         }
         client_max_body_size 512K;
@@ -251,7 +251,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always; # 启用HSTS
 
     location / {
-        if ($host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
+        if (\$host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
         }
               root /web;
@@ -278,7 +278,7 @@ systemctl restart nginx
 
 clear
 echo -e "安装完成!\n"
-echo "trojan://${passwd}@${domain}:$port?security=tls&alpn=h2&type=grpc&serviceName=trojan_grpc&mode=gun#Node_Trojan_gRPC" > ~/node
+echo "trojan://${passwd}@${domain}:$port?security=tls&alpn=h2&type=grpc&serviceName=trojan_grpc&mode=gun#Trojan_gRPC" > ~/node
 echo "已经为你生成了节点连接:"
 echo
 cat ~/node
