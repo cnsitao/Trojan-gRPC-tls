@@ -203,7 +203,7 @@ server {
         }
         client_max_body_size 512K;
         client_body_timeout 1071906480m;
-        grpc_set_header X-Real-IP $remote_addr;  # cdn $proxy_add_x_forwarded_for
+        grpc_set_header X-Real-IP \$remote_addr;  # cdn $proxy_add_x_forwarded_for
         grpc_read_timeout 1071906480m;
         grpc_pass grpc://127.0.0.1:16969;
     }
@@ -243,7 +243,7 @@ server {
         }
         client_max_body_size 512K;
         client_body_timeout 1071906480m;
-        grpc_set_header X-Real-IP $remote_addr;  # cdn $proxy_add_x_forwarded_for
+        grpc_set_header X-Real-IP \$remote_addr;  # cdn $proxy_add_x_forwarded_for
         grpc_read_timeout 1071906480m;
         grpc_pass grpc://127.0.0.1:16969;
     }
