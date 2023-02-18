@@ -1,4 +1,4 @@
-1111#!/bin/bash
+#!/bin/bash
 
 # author: https://t.me/iu536
 
