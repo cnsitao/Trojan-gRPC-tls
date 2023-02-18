@@ -3,6 +3,9 @@
 # author: https://t.me/iu536
 
 clear
+echo "Hello! 欢迎使用Trojan+gRPC+tls脚本"
+echo "作者:https://t.me/iu536"
+
 read -p "请输入你的域名:" domain
 
 if [ -z $domain ]
@@ -282,4 +285,5 @@ cat ~/node
 echo
 echo "下次查看节点可执行cat ~/node 命令查看"
 echo
+echo "访问你的域名试试"
 exit
