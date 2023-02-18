@@ -7,8 +7,8 @@ read -p "请输入你的域名:" domain
 
 if [ -z $domain ]
   then
-     clear
-     echo "别闹，你还没输入域名"
+         clear
+         echo "别闹，你还没输入域名"
 	 sleep 2
 	 read -p "请输入你的域名:" domain
 	  if [ -z $domain ]
@@ -167,12 +167,12 @@ if checkweb=='1'
 	     
 elif checkweb=='2'
   then 
-         wget https://raw.githubusercontent.com/LSitao/vless_gRPC_nginx_tls/main/web/movie.tar.gz
+             wget https://raw.githubusercontent.com/LSitao/vless_gRPC_nginx_tls/main/web/movie.tar.gz
 	     tar -zxvf movie.tar.gz -C /web
 
 elif checkweb=='3'
   then 
-         wget https://github.com/LSitao/Trojan-gRPC-tls/blob/main/web/share.tar.gz
+             wget https://github.com/LSitao/Trojan-gRPC-tls/blob/main/web/share.tar.gz
 	     tar -zxvf share.tar.gz -C /web
 
 fi
@@ -194,7 +194,7 @@ server {
     listen 443 ssl http2;
     server_name ${domain};
 
-	 location /trojan_grpc {
+   location /trojan_grpc {
         if ($content_type !~ "application/grpc") {
                 return 404;
         }
@@ -211,7 +211,7 @@ server {
         if ($host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
         }
-          root /web;
+              root /web;
 	      index index.html;
     }
 
@@ -251,7 +251,7 @@ server {
         if ($host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
         }
-         root /web;
+              root /web;
 	      index index.html;
     }
 
