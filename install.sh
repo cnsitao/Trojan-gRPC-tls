@@ -166,12 +166,12 @@ echo "Nginx安装成功!"
 mkdir /web
 if checkweb=='1'
  then
-         wget https://raw.githubusercontent.com/LSitao/vless_gRPC_nginx_tls/main/web/game.tar.gz
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/game.tar.gz
          tar -zxvf game.tar.gz -C /web
 	     
 elif checkweb=='2'
   then 
-             wget https://raw.githubusercontent.com/LSitao/vless_gRPC_nginx_tls/main/web/movie.tar.gz
+             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
 	     tar -zxvf movie.tar.gz -C /web
 
 elif checkweb=='3'
