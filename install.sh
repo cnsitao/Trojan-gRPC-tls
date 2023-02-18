@@ -1,4 +1,4 @@
-#!/bin/bash
+1111#!/bin/bash
 
 # author: https://t.me/iu536
 
@@ -176,7 +176,7 @@ elif checkweb=='2'
 
 elif checkweb=='3'
   then 
-             wget https://github.com/LSitao/Trojan-gRPC-tls/blob/main/web/share.tar.gz
+             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
 	     tar -zxvf share.tar.gz -C /web
 
 fi
