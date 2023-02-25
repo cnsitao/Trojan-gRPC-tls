@@ -178,6 +178,9 @@ elif checkweb=='3'
   then 
              wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
 	     tar -zxvf share.tar.gz -C /web
+	     cd /web/share
+	     mv ./* ..
+	     cd
 
 fi
 
