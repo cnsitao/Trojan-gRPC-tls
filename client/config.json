@@ -1,0 +1,31 @@
+{
+    "log": {
+        "loglevel": "warning"
+    },
+    "inbounds": [{
+        "port": your_local_port,
+        "listen": "127.0.0.1",
+        "protocol": "socks",
+        "settings": {
+            "udp": false
+        }
+    }],
+    "outbounds": [{
+        "protocol": "trojan",
+        "settings": {
+            "servers": [{
+                "address": "your_domain",
+                "port": your_port,
+                "password": "your_password",
+                "email": "yourmail@gmail.com"
+            }]
+        },
+        "streamSettings": {
+            "network": "grpc",
+            "security": "tls",
+            "grpcSettings": {
+                "serviceName": "trojan_grpc"
+            }
+        }
+    }]
+}
