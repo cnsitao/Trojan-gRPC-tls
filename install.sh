@@ -40,8 +40,30 @@ if [ -z $checkweb ]
  then checkweb=2
 fi
 
-mkdir /xray
+#伪装站
+mkdir /web
+if checkweb=='1'
+ then
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/game.tar.gz
+         tar -zxvf game.tar.gz -C /web
+	     
+elif checkweb=='2'
+  then 
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
+	 tar -zxvf movie.tar.gz -C /web
 
+elif checkweb=='3'
+  then 
+             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
+	     tar -zxvf share.tar.gz -C /web
+	     cd /web/share
+	     mv ./* ..
+	     cd
+
+fi
+
+mkdir /xray
+chmod 777 /xray
 #开bbr
 checkbbr=`lsmod | grep bbr`
 
@@ -94,7 +116,6 @@ fi
 wget https://github.com/XTLS/Xray-core/releases/download/v1.7.5/Xray-linux-64.zip
 apt-get install unzip -y
 unzip Xray-linux-64.zip -d /xray
-chmod 777 /xray
 cat << EOF > /xray/config.json
 {
     "log": {
@@ -168,28 +189,6 @@ apt update
 apt install nginx -y
 nginx -v
 echo "Nginx安装成功!"
-
-#伪装站
-mkdir /web
-if checkweb=='1'
- then
-         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/game.tar.gz
-         tar -zxvf game.tar.gz -C /web
-	     
-elif checkweb=='2'
-  then 
-         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
-	 tar -zxvf movie.tar.gz -C /web
-
-elif checkweb=='3'
-  then 
-             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
-	     tar -zxvf share.tar.gz -C /web
-	     cd /web/share
-	     mv ./* ..
-	     cd
-
-fi
 
 #配置nginx
 if [ $port -eq 443 ]
