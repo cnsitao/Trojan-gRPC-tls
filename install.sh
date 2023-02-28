@@ -35,31 +35,9 @@ if [ -z $passwd ]
 fi
 
 echo -e "你想要什么样的伪装站?\n"
-read -p "1.游戏直播; 2.影视站; 3.视频分享平台[默认2]:" checkweb
+read -p "[1] 游戏直播;[2] 影视站;[3] 视频分享平台 [默认2]:" checkweb
 if [ -z $checkweb ]
  then checkweb=2
-fi
-
-#伪装站
-mkdir /web
-if checkweb=='1'
- then
-         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/game.tar.gz
-         tar -zxvf game.tar.gz -C /web
-	     
-elif checkweb=='2'
-  then 
-         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
-	 tar -zxvf movie.tar.gz -C /web
-
-elif checkweb=='3'
-  then 
-             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
-	     tar -zxvf share.tar.gz -C /web
-	     cd /web/share
-	     mv ./* ..
-	     cd
-
 fi
 
 mkdir /xray
@@ -110,6 +88,28 @@ if `test -s /xray/tls/server.crt`
 else
         echo "证书安装失败！请检查原因！有问题可联系telegram @iu536"
 	exit
+fi
+
+#伪装站
+mkdir /web
+if [ "$checkweb" -eq "1" ]
+ then
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/game.tar.gz
+         tar -zxvf game.tar.gz -C /web
+	     
+elif [ "$checkweb" -eq "2" ]
+  then 
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
+	     tar -zxvf movie.tar.gz -C /web
+
+elif [ "$checkweb" -eq "3" ]
+  then 
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
+	     tar -zxvf share.tar.gz -C /web
+	     cd /web/share
+	     mv ./* ..
+	     cd
+
 fi
 
 #下载xray内核
