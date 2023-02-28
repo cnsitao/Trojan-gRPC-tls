@@ -1,0 +1,35 @@
+{
+    "log": {
+        "loglevel": "warning", 
+        "error": "/xray/error.log", 
+        "access": "/xray/access.log"
+    }, 
+    "inbounds": [
+        {
+            "port": 16969, 
+            "listen": "127.0.0.1", 
+            "protocol": "trojan", 
+            "tag": "trojan_grpc", 
+            "settings": {
+                "clients": [
+                    {
+                        "password": "your_password", 
+                        "email": "yourmail@gmail.com"
+                    }
+                ]
+            }, 
+            "streamSettings": {
+                "network": "grpc", 
+                "security": "none", 
+                "grpcSettings": {
+                    "serviceName": "trojan_grpc"
+                }
+            }
+        }
+    ], 
+    "outbounds": [
+        {
+            "protocol": "freedom"
+        }
+    ]
+}
