@@ -17,7 +17,7 @@ if [ -z $domain ]
 	 read -p "请输入你的域名:" domain
 	  if [ -z $domain ]
 	   then
-	   echo "焯,你还是没输入域名。。不玩了，两秒后退出脚本"
+	   echo "? 你还是没输入域名。。不玩了，两秒后退出脚本"
 	   echo
 	   sleep 2
 	   exit
@@ -39,6 +39,8 @@ read -p "1.游戏直播; 2.影视站; 3.视频分享平台[默认2]:" checkweb
 if [ -z $checkweb ]
  then checkweb=2
 fi
+
+mkdir /xray
 
 #开bbr
 checkbbr=`lsmod | grep bbr`
@@ -68,86 +70,91 @@ read
 
 #申请证书
 apt update
+mkdir -p /xray/tls
 apt install socat -y
 curl https://get.acme.sh | sh
 ln -s  /root/.acme.sh/acme.sh /usr/local/bin/acme.sh
 source ~/.bashrc
 acme.sh --set-default-ca --server letsencrypt
 acme.sh --issue -d $domain --standalone -k ec-256 --force
-acme.sh --installcert -d $domain --ecc  --key-file   /usr/server.key   --fullchain-file /usr/server.crt
-if `test -s /usr/server.crt` 
+acme.sh --installcert -d $domain --ecc  --key-file   /xray/tls/server.key   --fullchain-file /xray/tls/server.crt
+if `test -s /xray/tls/server.crt` 
   then 
         echo -e "证书申请成功!\n"
         echo -n "证书路径:"
         echo
-        echo -e "/usr/server.crt"
-        echo -e "/usr/server.key\n"
+        echo -e "/xray/tls/server.crt"
+        echo -e "/xray/tls/server.key\n"
 else
         echo "证书安装失败！请检查原因！有问题可联系telegram @iu536"
 	exit
 fi
 
-#安装Xray
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-
-systemctl enable xray
-
-cat << EOF > /usr/local/etc/xray/config.json
+#下载xray内核
+wget https://github.com/XTLS/Xray-core/releases/download/v1.7.5/Xray-linux-64.zip
+apt-get install unzip -y
+unzip Xray-linux-64.zip -d /xray
+chmod 777 /xray
+cat << EOF > /xray/config.json
 {
     "log": {
-        "loglevel": "warning",
-        "error": "/var/log/xray/error.log",
-        "access": "/var/log/xray/access.log"
-    },
+        "loglevel": "warning", 
+        "error": "/xray/error.log", 
+        "access": "/xray/access.log"
+    }, 
     "inbounds": [
         {
-            "port": 16969,
-            "listen": "127.0.0.1",
-            "protocol": "trojan",
-            "tag": "trojan_grpc",
+            "port": 16969, 
+            "listen": "127.0.0.1", 
+            "protocol": "trojan", 
+            "tag": "trojan_grpc", 
             "settings": {
                 "clients": [
                     {
-                        "password": "$passwd",
+                        "password": "$passwd", 
                         "email": "yourmail@gmail.com"
                     }
                 ]
-            },
+            }, 
             "streamSettings": {
-                "network": "grpc",
-                "security": "none",
+                "network": "grpc", 
+                "security": "none", 
                 "grpcSettings": {
                     "serviceName": "trojan_grpc"
                 }
             }
         }
-    ],
-    "routing": {
-        "domainStrategy": "IPIfNonMatch",
-        "rules": [
-            {
-                "type": "field",
-                "protocol": [
-                    "bittorrent"
-                ],
-                "outboundTag": "blocked"
-            }
-        ]
-    },
+    ], 
     "outbounds": [
         {
-            "protocol": "freedom",
-            "settings": {}
-        },
-        {
-            "tag": "blocked",
-            "protocol": "blackhole",
-            "settings": {}
+            "protocol": "freedom"
         }
     ]
 }
 EOF
-systemctl restart xray
+
+cat << EOF > /etc/systemd/system/xray.service
+[Unit]
+Description=Xray Service
+Documentation=https://github.com/xtls
+After=network.target nss-lookup.target
+
+[Service]
+User=nobody
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=/xray/xray run -config /xray/config.json
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl start xray.service
+systemctl enable xray.service
 
 #安装nginx
 apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring -y
@@ -171,12 +178,12 @@ if checkweb=='1'
 	     
 elif checkweb=='2'
   then 
-             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
 	     tar -zxvf movie.tar.gz -C /web
 
 elif checkweb=='3'
   then 
-             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
+         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
 	     tar -zxvf share.tar.gz -C /web
 	     cd /web/share
 	     mv ./* ..
@@ -200,7 +207,6 @@ server {
 server {
     listen 443 ssl http2;
     server_name ${domain};
-
    location /trojan_grpc {
         if (\$content_type !~ "application/grpc") {
                 return 404;
@@ -211,9 +217,7 @@ server {
         grpc_read_timeout 1071906480m;
         grpc_pass grpc://127.0.0.1:16969;
     }
-
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always; # 启用HSTS
-
     location / {
         if (\$host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
@@ -221,9 +225,8 @@ server {
               root /web;
 	      index index.html;
     }
-
-    ssl_certificate /usr/server.crt;
-    ssl_certificate_key /usr/server.key;
+    ssl_certificate /xray/tls/server.crt;
+    ssl_certificate_key /xray/tls/server.key;
     ssl_stapling on;
     ssl_stapling_verify on;
     resolver 8.8.8.8 8.8.4.4 valid=300s;
@@ -251,9 +254,7 @@ server {
         grpc_read_timeout 1071906480m;
         grpc_pass grpc://127.0.0.1:16969;
     }
-
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always; # 启用HSTS
-
     location / {
         if (\$host ~* "\d+\.\d+\.\d+\.\d+") { # 禁止以ip方式访问网站
                 return 400;
@@ -261,9 +262,8 @@ server {
               root /web;
 	      index index.html;
     }
-
-    ssl_certificate /usr/server.crt;
-    ssl_certificate_key /usr/server.key;
+    ssl_certificate /xray/tls/server.crt;
+    ssl_certificate_key /xray/tls/server.key;
     ssl_stapling on;
     ssl_stapling_verify on;
     resolver 8.8.8.8 8.8.4.4 valid=300s;
