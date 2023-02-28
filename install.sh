@@ -55,13 +55,13 @@ if test -z "$checkbbr"
                 echo "net.core.default_qdisc = fq" >> /etc/sysctl.conf
                 echo "net.ipv4.tcp_congestion_control = bbr" >> /etc/sysctl.conf
                 sysctl -p
-				echo "BBR开启成功！"
-				sleep 1   
+		echo "BBR开启成功！"
+		sleep 1   
          fi
   
   else    
        echo "检测到你的系统已经开启BBR啦！"
-	   sleep 1 	
+       sleep 1 	
 fi
 
 clear
@@ -179,11 +179,11 @@ if checkweb=='1'
 elif checkweb=='2'
   then 
          wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/movie.tar.gz
-	     tar -zxvf movie.tar.gz -C /web
+	 tar -zxvf movie.tar.gz -C /web
 
 elif checkweb=='3'
   then 
-         wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
+             wget https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/web/share.tar.gz
 	     tar -zxvf share.tar.gz -C /web
 	     cd /web/share
 	     mv ./* ..
