@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# author: https://t.me/iu536
-
 clear
 echo "Hello! 欢迎使用Trojan+gRPC+tls脚本"
-echo "作者:https://t.me/iu536"
+echo "有问题联系root@sitao.org"
 echo
 
 read -p "请输入你的域名:" domain
