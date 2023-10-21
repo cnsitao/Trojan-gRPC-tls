@@ -1,3 +1,1 @@
-install:
-
-curl https://raw.githubusercontent.com/LSitao/Trojan-gRPC-tls/main/install.sh > install.sh && bash install.sh
+bash <(curl -sL https://raw.githubusercontent.com/cnsitao/Trojan-gRPC-tls/main/install.sh)
